@@ -1,0 +1,31 @@
+{
+    "name": "govtnz/progresslogentry",
+    "description": "Tools for dealing with the filesystem and files. Requires SilverStripe >= 3.0.",
+    "homepage": "https://github.com/govtnz/progresslogentry",
+ 	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/govtnz/progresslogentry"
+		}
+	],
+	"require": {
+			"php": ">=5.3",
+			"silverstripe/framework": ">=3.0"
+ 	},
+	"authors": [
+ 		{
+ 			"name": "wakes",
+ 			"email": "wakes@github.com",
+ 			"homepage": "https://github.com/wakes/",
+ 			"role": "Developer"
+ 		}
+ 	],
+ 	"support": {
+ 		"issues": "https://github.com/govtnz/progresslogentry/issues"
+ 	},
+ 	"autoload": {
+ 		"classmap": [
+ 			"src/"
+ 		]
+ 	}
+}
