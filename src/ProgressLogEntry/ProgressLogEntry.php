@@ -7,7 +7,7 @@ namespace GOVTNZ;
  * Last ResultMessage/ResultInfo is then either success outcome, an error message, or if hard error occurs will have the
  * last progress update before the failure (and not Success or Failed).
  */
-class ProgressLogEntry extends DataObject {
+class ProgressLogEntry extends \DataObject {
 	const ResultMessageStarted = 'Started';
 	const ResultMessageProgress = 'Working';
 	const ResultMessageSuccess = 'Success';
