@@ -13,7 +13,8 @@ class ProgressLogEntry extends DataObject {
 	const ResultMessageFailed = 'Failed';
 
 	private static $db = array(
-		'Task' => 'Varchar(255)',
+		'Task' => 'Varchar(32)',
+		'Action' => 'Varchar(32)',
 		'Who' => "Varchar(256)",
 		'Started' => 'SS_Datetime',
 		'Ended' => 'SS_Datetime',
@@ -24,6 +25,7 @@ class ProgressLogEntry extends DataObject {
 
 	private static $summary_fields = array(
 		'Task',
+		'Action',
 		'Who',
 		'Ended',
 		'ResultMessage',
@@ -38,14 +40,25 @@ class ProgressLogEntry extends DataObject {
 	 * SideEffects:
 	 *  Writes object to the database.
 	 *
-	 * @param $task - what task is logging progress
+	 * @param $task - what task is logging progress (if null default to derived class name)
+	 * @param $action - what is being done (if null default to method called on derived class)
 	 * @param string $message defaults to 'Started'
 	 * @param string|null $info any additional info on create
 	 * @return ProgressLogEntry
 	 */
-	public static function create($task = null, $message = ProgressLogEntry::ResultMessageStarted, $info = null) {
+	public static function create($task = null, $action = null, $message = ProgressLogEntry::ResultMessageStarted, $info = null) {
+		if (is_null($task) || is_null($action)) {
+			$info = static::get_caller_info;
+			if (is_null($task)) {
+				$task = $info['class']
+			}
+			if (is_null($action)) {
+				$action = $info['function'];
+			}
+		}
 		$logEntry = parent::create(array(
-			'Task' => $task ?: static::get_caller_info(),
+			'Task' => $task,
+			'Action' => $action,
 			'ResultMessage' => $message,
 			'ResultInfo' => $info
 		));
@@ -55,7 +68,7 @@ class ProgressLogEntry extends DataObject {
 
 	private static function get_caller_info() {
 		$trace = debug_backtrace();
-		return $trace[2]['class'] . "::" . $trace[2]['function'];
+		return $trace[2];
 	}
 
 	/**
