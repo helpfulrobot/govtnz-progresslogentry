@@ -12,9 +12,11 @@ class ProgressLogEntry extends DataObject {
 	const ResultMessageSuccess = 'Success';
 	const ResultMessageFailed = 'Failed';
 
+	protected static $action = 'Initialised';
+
 	private static $db = array(
 		'Task' => 'Varchar(32)',
-		'Action' => 'Varchar(32)',
+		'Action' => "Varchar(32)",
 		'Who' => "Varchar(256)",
 		'Started' => 'SS_Datetime',
 		'Ended' => 'SS_Datetime',
@@ -40,20 +42,21 @@ class ProgressLogEntry extends DataObject {
 	 * SideEffects:
 	 *  Writes object to the database.
 	 *
-	 * @param $task - what task is logging progress (if null default to derived class name)
-	 * @param $action - what is being done (if null default to method called on derived class)
+	 * @param $action - what the task action is
+	 * @param $task - what task is logging progress
 	 * @param string $message defaults to 'Started'
-	 * @param string|null $info any additional info on create
+	 * @param null $info any additional info on create
 	 * @return ProgressLogEntry
 	 */
 	public static function create($task = null, $action = null, $message = ProgressLogEntry::ResultMessageStarted, $info = null) {
 		if (is_null($task) || is_null($action)) {
-			$info = static::get_caller_info;
-			if (is_null($task)) {
-				$task = $info['class']
+			$info = self::get_caller_info();
+
+			if (!$task) {
+				$task = $info[0];
 			}
-			if (is_null($action)) {
-				$action = $info['function'];
+			if (!$action) {
+				$action = $info[1];
 			}
 		}
 		$logEntry = parent::create(array(
@@ -66,9 +69,12 @@ class ProgressLogEntry extends DataObject {
 		return $logEntry;
 	}
 
-	private static function get_caller_info() {
+	public static function get_caller_info() {
 		$trace = debug_backtrace();
-		return $trace[2];
+		return array(
+			$trace[2]['class'],
+			$trace[2]['function']
+		);
 	}
 
 	/**
@@ -87,30 +93,30 @@ class ProgressLogEntry extends DataObject {
 		return $this;
 	}
 
-	/**
-	 * Update with ResultMessageProgress as Message
-	 * @param $info
-	 * @return ProgressLogEntry
-	 */
-	public function step($info) {
-		return $this->update_progress(static::ResultMessageProgress, $info);
-	}
-	/**
-	 * Update with ResultMessageSuccess as Message
-	 * @param $info
-	 * @return ProgressLogEntry
-	 */
-	public function success($info) {
-		return $this->update_progress(static::ResultMessageSuccess, $info);
-	}
-	/**
-	 * Update with ResultMessageFailed as Message
-	 * @param $info
-	 * @return ProgressLogEntry
-	 */
-	public function failed($info) {
-		return $this->update_progress(static::ResultMessageFailed, $info);
-	}
+    /**
+     * Update with ResultMessageProgress as Message
+     * @param $info
+     * @return ProgressLogEntry
+     */
+    public function step($info) {
+        return $this->update_progress(static::ResultMessageProgress, $info);
+    }
+    /**
+     * Update with ResultMessageSuccess as Message
+     * @param $info
+     * @return ProgressLogEntry
+     */
+    public function success($info) {
+        return $this->update_progress(static::ResultMessageSuccess, $info);
+    }
+    /**
+     * Update with ResultMessageFailed as Message
+     * @param $info
+     * @return ProgressLogEntry
+     */
+    public function failed($info) {
+        return $this->update_progress(static::ResultMessageFailed, $info);
+    }
 
 	/**
 	 * echos info to the output buffer via format
@@ -119,24 +125,24 @@ class ProgressLogEntry extends DataObject {
 		echo $this->format();
 	}
 
-	/**
-	 * Format for output
-	 * @param string $prefix
-	 * @param string $suffix
-	 * @return string
-	 */
-	public function format($prefix = '', $suffix = '') {
-		return "$prefix$this->Ended\t$this->ResultMessage" . ($this->ResultInfo ? ":\t$this->ResultInfo" : '') . "$suffix\n";
-	}
+    /**
+     * Format for output
+     * @param string $prefix
+     * @param string $suffix
+     * @return string
+     */
+    public function format($prefix = '', $suffix = '') {
+        return "$prefix$this->Ended\t$this->ResultMessage" . ($this->ResultInfo ? ":\t$this->ResultInfo" : '') . "$suffix\n";
+    }
 
-	/**
-	 * No manual creation.
-	 * @param null $member
-	 * @return bool
-	 */
-	public function canCreate($member = null) {
-		return false;
-	}
+    /**
+     * No manual creation.
+     * @param null $member
+     * @return bool
+     */
+    public function canCreate($member = null) {
+        return false;
+    }
 	/**
 	 * No editing.
 	 * @param null $member see DataObject
