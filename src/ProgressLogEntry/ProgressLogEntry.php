@@ -10,6 +10,7 @@ class ProgressLogEntry extends DataObject {
 	const ResultMessageStarted = 'Started';
 	const ResultMessageProgress = 'Working';
 	const ResultMessageSuccess = 'Success';
+	const ResultMessageWarning = 'Warning';
 	const ResultMessageFailed = 'Failed';
 
 	protected static $action = 'Initialised';
@@ -109,7 +110,14 @@ class ProgressLogEntry extends DataObject {
     public function success($info) {
         return $this->update_progress(static::ResultMessageSuccess, $info);
     }
-    /**
+	/**
+	 * Update with ResultMessageWarning as Message
+	 * @param $info
+	 * @return ProgressLogEntry
+	 */
+	public function warning($info) {
+		return $this->update_progress(static::ResultMessageWarning, $info);
+	}    /**
      * Update with ResultMessageFailed as Message
      * @param $info
      * @return ProgressLogEntry
