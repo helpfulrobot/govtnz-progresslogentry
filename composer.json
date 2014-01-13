@@ -1,6 +1,6 @@
 {
     "name": "govtnz/progresslogentry",
-    "description": "Tools for dealing with the filesystem and files. Requires SilverStripe >= 3.0.",
+    "description": "Module for logging progress of a task. Can also be derived from to create tasks and track their progress. Requires SilverStripe >= 3.0.",
     "homepage": "https://github.com/govtnz/progresslogentry",
     "type": "silverstripe-module",
  	"repositories": [
