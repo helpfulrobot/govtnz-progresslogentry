@@ -2,6 +2,7 @@
     "name": "govtnz/progresslogentry",
     "description": "Tools for dealing with the filesystem and files. Requires SilverStripe >= 3.0.",
     "homepage": "https://github.com/govtnz/progresslogentry",
+    "type": "silverstripe-module",
  	"repositories": [
 		{
 			"type": "vcs",
@@ -27,5 +28,8 @@
  		"classmap": [
  			"src/"
  		]
+ 	},
+ 	"extra": {
+ 		"installer-name": "progresslogentry"
  	}
 }
