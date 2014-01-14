@@ -51,13 +51,13 @@ class ProgressLogEntry extends DataObject {
 	 */
 	public static function create($task = null, $action = null, $message = ProgressLogEntry::ResultMessageStarted, $info = null) {
 		if (is_null($task) || is_null($action)) {
-			$info = self::get_caller_info();
+			$callerInfo = self::get_caller_info();
 
 			if (!$task) {
-				$task = $info[0];
+				$task = $callerInfo[0];
 			}
 			if (!$action) {
-				$action = $info[1];
+				$action = $callerInfo[1];
 			}
 		}
 		$logEntry = parent::create(array(
